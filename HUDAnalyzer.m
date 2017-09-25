@@ -28,19 +28,26 @@ gameList = gameInfo.Title;
 genre = gameInfo.Genre;
 HUDTable = table(gameList,PerArea,ReleaseYear,genre);
 
-% graphing percent area for all games
+% graphing percent area HUD for all games
 for n = 1:2
-    if n == 1
-        T = sortrows(HUDTable,'ReleaseYear');
-    else
-        T = sortrows(HUDTable,'PerArea');
+    if n == 1 % plot by release year
+        T = sortrows(HUDTable,'ReleaseYear'); % sorted by release
+    else % plot by PerArea
+        T = sortrows(HUDTable,'PerArea'); % sorted by HUD screen size
     end
     bar_list = T.gameList';
     bar_values = T.PerArea;
     fig1 = figure(n);
-    bar(bar_values);
-    set(gca,'XtickLabel',T.gameList,'XTick',1:nmasks);
-    set(gca,'XTickLabelRotation',45);
+    barh(bar_values);
+    
+    NewList = cell(50,1);
+    % combine title with release year
+    for x = 1:nmasks
+        NewList{x} = strcat(T.gameList{x},' (',int2str(T.ReleaseYear(x)),')');
+    end
+    
+    set(gca,'YtickLabel',NewList,'YTick',1:nmasks);
+%     set(gca,'XTickLabelRotation',45);
     ylabel("Percentage of Screen Size")
     set(fig1,'Position',[100,100,1440,800])
 
@@ -53,7 +60,7 @@ for n = 1:2
     set(ax2, 'XTick', get(ax1, 'XTick'), 'YTick', get(ax1, 'YTick'));
     OppTickLabels = T.ReleaseYear';
     % Set the x-tick and y-tick  labels for the second axes
-    set(ax2, 'XTickLabel', OppTickLabels);
+%     set(ax2, 'XTickLabel', OppTickLabels);
     ax2.XLabel.String = 'Release Year';
     set(ax2,'XTickLabelRotation',90);
 end
